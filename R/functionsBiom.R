@@ -2,32 +2,34 @@
 #'
 #' Genera datos de entrenamiento a partir de una base de datos mediante diferentes técnicas de cross-validation
 #' @param Y.tr vector de datos de clase "factor" donde se indican las condiciones experimentales (a comparar) de cada individuo
-#' @param learnSetNames método a utilizar para la generación de "learningsSets". Los diferentes métodos (LOOCV, CV, MCCV, bootstrap) se explican en "See Also"
+#' @param learnSetNames método a utilizar para la generación de "learningsSets". Los diferentes métodos (LOOCV, CV, MCCV, bootstrap) se explican en \code{\link{GenerateLearningsets}} 
 #' @param compName nombre de la comparación, se usara como identificador y para el nombre de archivos resultantes
 #' @param resultsDir carpeta donde se guardaran los resultados. p.e. "results/". Solo necesario cuando saveLearnSet = TRUE
 #' @param fold Gives the number of CV-groups. Used only when method="CV"
-#' @param numIter Number of iterations (s.details).
+#' @param niter Number of iterations (s.details).
 #' @param saveLearnSet valor logico que indica si se guardan los resultados en disco
-#' @keywords cma predictor biomarcador clasificador learningsets
 #' @export prepLearnSets
 #' @import CMA
 #' @author Miriam Mota <mmota.foix@@gmail.com>
 #' @seealso Text with \code{\link{GenerateLearningsets}} 
 #' @examples
-#' # require("CMA")
-#' # y <- factor(c(rep("A",10),rep("B",10)))
-#' # lSet <- prepLearnSets(Y.tr = y , learnSetNames = "LOOCV", compName = "AvsB", saveLearnSet = F) 
+#' require(CMA)
+#' y <- factor(c(rep("A",10),rep("B",10)))
+#' lSet <- prepLearnSets(Y.tr = y , learnSetNames = "LOOCV", compName = "AvsB", saveLearnSet = F) 
+#' @return learningSets datos resultantes, "datos de entrenamiento". Objeto con clase "learningsets".
+#' @return learningSetsFileName nombre del archivo guardado con los "datos de entrenamiento"
+#' @keywords cma predictor biomarcador clasificador learningsets
+#' @references M Slawski, M Daumer and A-L Boulesteix, CMA – a comprehensive Bioconductor package for supervised classification with high dimensional data
 
-
-prepLearnSets <- function(Y.tr, learnSetNames, compName,resultsDir,  fold = 5 , numIter = 100, saveLearnSet = T){
+prepLearnSets <- function(Y.tr, learnSetNames, compName,resultsDir,  fold = 5 , niter = 100, saveLearnSet = T){
   if (learnSetNames == "LOOCV") loo <- GenerateLearningsets(y = Y.tr, method = learnSetNames)
   if (learnSetNames == "bootstrap") loo <- GenerateLearningsets(y = Y.tr, method = learnSetNames,
-                                                                niter = numIter,ntrain = floor(2/3*length(Y.tr)))
-  if (learnSetNames == "CV") loo <- GenerateLearningsets(y = Y.tr, method = learnSetNames,fold = fold, niter = numIter)
+                                                                niter = niter,ntrain = floor(2/3*length(Y.tr)))
+  if (learnSetNames == "CV") loo <- GenerateLearningsets(y = Y.tr, method = learnSetNames,fold = fold, niter = niter)
   if (learnSetNames == "MCCV") loo <- GenerateLearningsets(y = Y.tr, method = learnSetNames,
-                                                           niter = numIter,ntrain = floor(2/3*length(Y.tr)))
+                                                           niter = niter,ntrain = floor(2/3*length(Y.tr)))
   learningSets <- list(oneFold = loo)
-  learningSetsFileName <- paste0(compName, "_learningSets_", if (learnSetNames != "LOOCV") {paste0(numIter, "iter")},".Rda")
+  learningSetsFileName <- paste0(compName, "_learningSets_", if (learnSetNames != "LOOCV") {paste0(niter, "iter")},".Rda")
   if (saveLearnSet) {
     save(learningSets, file = file.path(resultsDir, learningSetsFileName))
   }
@@ -49,7 +51,7 @@ prepLearnSets <- function(Y.tr, learnSetNames, compName,resultsDir,  fold = 5 , 
 #' @param resultsDir carpeta donde se guardaran los resultados. p.e. "results/". Solo necesario cuando saveLearnSet = TRUE
 #' @param compName nombre de la comparación, se usara como identificador y para el nombre de archivos resultantes
 #' @param fold Gives the number of CV-groups. Used only when method="CV"
-#' @param numIter Number of iterations (s.details).
+#' @param niter Number of iterations (s.details).
 #' @param ntoplist número de features que se muestran en la lista de candidatos
 #' @param X.new  Solo si validation = TRUE. matriz númerica con los valores de los datos. Donde las columnas son los "features" y las filas los individuos. Estos datos serán usados para la validación del biomarcador
 #' @param Y.new Solo si validation = TRUE. vector de datos de clase "factor" donde se indican las condiciones experimentales (a comparar) de cada individuo indicado en las filas de X.new
@@ -61,27 +63,29 @@ prepLearnSets <- function(Y.tr, learnSetNames, compName,resultsDir,  fold = 5 , 
 #' @author Miriam Mota <mmota.foix@@gmail.com>
 #' @seealso Text with \code{\link{GeneSelection}} 
 #' @examples
-#' # x <- cbind(matrix(rnorm(400,500),nrow = 40),matrix(rnorm(400,5),nrow = 40))
-#' # colnames(x) <- paste0("a",1:ncol(x))
-#' # rownames(x) <- paste0("aa",1:nrow(x))
-#' # y <- factor(c(rep("A",20),rep("B",20)))
-#' # lSet <- prepLearnSets(Y.tr = y , learnSetNames = "LOOCV", compName = "AvsB", saveLearnSet = F)  
-#' # resF <- createClassif(X.tr = x,
-#' #                       Y.tr = y,
-#'   #                    learningSets  = lSet$learningSets,
-#'     #                  learnSetNames = c("LOOCV"),
-#'       #                selMethodNames = c("t.test"),
-#'         #              numGenes2Sel = c(3,5,10),
-#'           #            classifierNames = c("CMA::dldaCMA", "CMA::rfCMA", "CMA::pnnCMA") , 
-#'             #          resultsDir = "results/",
-#'               #        compName = "AvsB",
-#'                 #      validation=FALSE,
-#'                   #    ntoplist = 10)
+#' require(CMA)
+#' require(xlsx)
+#'  x <- cbind(matrix(rnorm(400,500),nrow = 40),matrix(rnorm(400,5),nrow = 40))
+#'  colnames(x) <- paste0("a",1:ncol(x))
+#'  rownames(x) <- paste0("aa",1:nrow(x))
+#'  y <- factor(c(rep("A",20),rep("B",20)))
+#'  lSet <- prepLearnSets(Y.tr = y , learnSetNames = "LOOCV", compName = "AvsB", saveLearnSet = F)  
+#'  resF <- createClassif(X.tr = x,
+#'                        Y.tr = y,
+#'                       learningSets  = lSet$learningSets,
+#'                       learnSetNames = c("LOOCV"),
+#'                       selMethodNames = c("t.test"),
+#'                       numGenes2Sel = c(3,5,10),
+#'                       classifierNames = c("CMA::dldaCMA", "CMA::rfCMA", "CMA::pnnCMA") , 
+#'                       resultsDir = "example/",
+#'                       compName = "AvsB",
+#'                       validation=FALSE,
+#'                       ntoplist = 10)
 
 
 
 createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodNames, numGenes2Sel = c(3,5,10), classifierNames,
-                          cond3=FALSE, isTunable, resultsDir, compName, numIter,ntoplist = 25, X.new, Y.new, validation = TRUE)
+                          cond3=FALSE, isTunable, resultsDir, compName, niter,ntoplist = 25, X.new, Y.new, validation = TRUE)
 {
   classifs <- list();   geneSels <- list() ;   results <- list(); misscls <- list()
   for (i in 1:length(learningSets)) {
@@ -129,9 +133,9 @@ createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodName
   }
   
   ## save results features seleccionats i classificacio
-  selectedGenesFileName <- paste0(compName, "_selectedGenes_",if (learnSetNames != "LOOCV") {paste0(numIter, "iter")}, ".Rda")
+  selectedGenesFileName <- paste0(compName, "_selectedGenes_",if (learnSetNames != "LOOCV") {paste0(niter, "iter")}, ".Rda")
   save(geneSels, file = file.path(resultsDir, selectedGenesFileName))
-  classifsFileName <- paste0(compName, "_classifs_", if (learnSetNames != "LOOCV") {paste0(numIter, "iter")}, ".Rda")
+  classifsFileName <- paste0(compName, "_classifs_", if (learnSetNames != "LOOCV") {paste0(niter, "iter")}, ".Rda")
   save(classifs, file = file.path(resultsDir, classifsFileName))
   
   # corbes ROC
@@ -152,7 +156,7 @@ createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodName
   }
   
   if (!cond3) { # no funciona be, cal mirar-ho
-    pdf(file.path(resultsDir,paste0(compName, "_ROC", if (learnSetNames != "LOOCV") {paste0(numIter, "iter")}, ".pdf")),onefile = T)
+    pdf(file.path(resultsDir,paste0(compName, "_ROC", if (learnSetNames != "LOOCV") {paste0(niter, "iter")}, ".pdf")),onefile = T)
     par(mfrow = c(2,2))
     for (i in seq(along = resClass)) try(roc(eval(resClass[[i]]), main = names(resClass)[[i]]),TRUE)
     dev.off()  
@@ -170,7 +174,7 @@ createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodName
   
   
   # guardem features candidats
-  biomarkersFileName <- paste0(compName, "Results",if (learnSetNames != "LOOCV")  {paste0(numIter, "iter")} , ".xls")
+  biomarkersFileName <- paste0(compName, "Results",if (learnSetNames != "LOOCV")  {paste0(niter, "iter")} , ".xls")
   write.xlsx(results[["selectedTable"]], file = file.path(resultsDir, biomarkersFileName), row.names = FALSE , sheetName = "candidateBiomarkers")
   
   
@@ -197,13 +201,13 @@ createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodName
   ## SAVE COMPARED RESULTS 
   write.xlsx(resultsClassif, file = file.path(resultsDir,
                                               paste0(compName, "Results", if (learnSetNames != "LOOCV")
-                                              {paste0(numIter, "iter")}, ".xls")),sheetName = "classif",append = TRUE)
+                                              {paste0(niter, "iter")}, ".xls")),sheetName = "classif",append = TRUE)
   
   if (validation) {
     resValid <- cbind(resultsClassif,misclassifTEST = unlist(misscls))
     write.xlsx(resValid, file = file.path(resultsDir,
                                           paste0(compName, "Results", if (learnSetNames != "LOOCV")
-                                          {paste0(numIter, "iter")}, ".xls")),sheetName = "validation", append = TRUE)
+                                          {paste0(niter, "iter")}, ".xls")),sheetName = "validation", append = TRUE)
   }
   
   if (validation) {

@@ -6,7 +6,7 @@
 \usage{
 createClassif(X.tr, Y.tr, learningSets, learnSetNames, selMethodNames,
   numGenes2Sel = c(3, 5, 10), classifierNames, cond3 = FALSE, isTunable,
-  resultsDir, compName, numIter, ntoplist = 25, X.new, Y.new,
+  resultsDir, compName, niter, ntoplist = 25, X.new, Y.new,
   validation = TRUE)
 }
 \arguments{
@@ -30,7 +30,7 @@ createClassif(X.tr, Y.tr, learningSets, learnSetNames, selMethodNames,
 
 \item{compName}{nombre de la comparación, se usara como identificador y para el nombre de archivos resultantes}
 
-\item{numIter}{Number of iterations (s.details).}
+\item{niter}{Number of iterations (s.details).}
 
 \item{ntoplist}{número de features que se muestran en la lista de candidatos}
 
@@ -46,22 +46,24 @@ createClassif(X.tr, Y.tr, learningSets, learnSetNames, selMethodNames,
 Construcción y validación externa de un biomarcador.
 }
 \examples{
-# x <- cbind(matrix(rnorm(400,500),nrow = 40),matrix(rnorm(400,5),nrow = 40))
-# colnames(x) <- paste0("a",1:ncol(x))
-# rownames(x) <- paste0("aa",1:nrow(x))
-# y <- factor(c(rep("A",20),rep("B",20)))
-# lSet <- prepLearnSets(Y.tr = y , learnSetNames = "LOOCV", compName = "AvsB", saveLearnSet = F)  
-# resF <- createClassif(X.tr = x,
-#                       Y.tr = y,
-  #                    learningSets  = lSet$learningSets,
-    #                  learnSetNames = c("LOOCV"),
-      #                selMethodNames = c("t.test"),
-        #              numGenes2Sel = c(3,5,10),
-          #            classifierNames = c("CMA::dldaCMA", "CMA::rfCMA", "CMA::pnnCMA") , 
-            #          resultsDir = "results/",
-              #        compName = "AvsB",
-                #      validation=FALSE,
-                  #    ntoplist = 10)
+require(CMA)
+require(xlsx)
+ x <- cbind(matrix(rnorm(400,500),nrow = 40),matrix(rnorm(400,5),nrow = 40))
+ colnames(x) <- paste0("a",1:ncol(x))
+ rownames(x) <- paste0("aa",1:nrow(x))
+ y <- factor(c(rep("A",20),rep("B",20)))
+ lSet <- prepLearnSets(Y.tr = y , learnSetNames = "LOOCV", compName = "AvsB", saveLearnSet = F)  
+ resF <- createClassif(X.tr = x,
+                       Y.tr = y,
+                      learningSets  = lSet$learningSets,
+                      learnSetNames = c("LOOCV"),
+                      selMethodNames = c("t.test"),
+                      numGenes2Sel = c(3,5,10),
+                      classifierNames = c("CMA::dldaCMA", "CMA::rfCMA", "CMA::pnnCMA") , 
+                      resultsDir = "example/",
+                      compName = "AvsB",
+                      validation=FALSE,
+                      ntoplist = 10)
 }
 \author{
 Miriam Mota <mmota.foix@gmail.com>
