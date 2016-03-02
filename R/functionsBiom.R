@@ -55,8 +55,8 @@ prepLearnSets <- function(Y.tr, learnSetNames, compName,resultsDir,  fold = 5 , 
 #' @param X.new  Solo si validation = TRUE. matriz númerica con los valores de los datos. Donde las columnas son los "features" y las filas los individuos. Estos datos serán usados para la validación del biomarcador
 #' @param Y.new Solo si validation = TRUE. vector de datos de clase "factor" donde se indican las condiciones experimentales (a comparar) de cada individuo indicado en las filas de X.new
 #' @param validation valor lógico que indica si se incluye una base de datos de validación.
-#' @param cond3 valor lógico que indica si se la comparación, es decir, los factores son igual a 3. 
-#' @param saveResults valor logico que indica si se guardan los resultados en disco
+#' @param multiclass valor lógico que indica si se la comparación, es decir, los factores son igual a 3. 
+#' @param saveXLS valor logico que indica si se guardan los resultados en disco
 #' @keywords cma predictor biomarcador clasificador learningsets
 #' @export createClassif
 #' @import CMA xlsx
@@ -79,13 +79,17 @@ prepLearnSets <- function(Y.tr, learnSetNames, compName,resultsDir,  fold = 5 , 
 #'                       compName = "AvsB",
 #'                       validation=FALSE,
 #'                       ntoplist = 10)
+#' @return candFeat:  tablas con los features seleccionados, tanto con identificador númerico (table_all) como con la etiqueta de cada feature (selectedTable)
+#' @return cl:  resultado en formato "cloutput" de cada uno de los biomarcadores realizados para cada método
+#' @return ResultsClassif: resultados resumidos de cada biomarcador, en el caso de dos condiciones experimentales se obtienen los siguientes indicadores de calidad: misclassification, sensitivity y specificity. Si son más de dos condiciones experimentales obtenemos únicamente misclassification.
 
 
 
 createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodNames, numGenes2Sel = c(3,5,10), classifierNames,
-                          cond3=FALSE, isTunable, resultsDir, compName, niter,ntoplist = 25, X.new, Y.new, validation = TRUE,
-                          saveResults = TRUE)
+                          multiclass=FALSE, isTunable, resultsDir, compName, niter,ntoplist = 25, X.new, Y.new, validation = TRUE,
+                          saveXLS = TRUE)
 {
+  if (!dir.exists(resultsDir)) dir.create(resultsDir)
   classifs <- list();   geneSels <- list() ;   results <- list(); misscls <- list()
   for (i in 1:length(learningSets)) {
     for (j in 1:length(selMethodNames)) {
@@ -140,7 +144,7 @@ createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodName
   # corbes ROC
   resClass <- lapply(classifs, join)
   
-  if (cond3) {
+  if (multiclass) {
     if (!dir.exists(paste0(resultsDir,"/contrastsMatrix"))) dir.create(paste0(resultsDir,"/contrastsMatrix"))
     missclsINT <- NULL
     for (i in 1:length(resClass)) {
@@ -153,8 +157,8 @@ createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodName
       names(missclsINT)[i] <- names(resClass)[[i]]
     }
   }
-  
-  if (!cond3) { # no funciona be, cal mirar-ho
+  # corbes ROC
+  if (!multiclass) { # no funciona be, cal mirar-ho
     pdf(file.path(resultsDir,paste0(compName, "_ROC", if (learnSetNames != "LOOCV") {paste0(niter, "iter")}, ".pdf")),onefile = T)
     par(mfrow = c(2,2))
     for (i in seq(along = resClass)) try(roc(eval(resClass[[i]]), main = names(resClass)[[i]]),TRUE)
@@ -174,7 +178,7 @@ createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodName
   
   # guardem features candidats
   biomarkersFileName <- paste0(compName, "Results",if (learnSetNames != "LOOCV")  {paste0(niter, "iter")} , ".xls")
-  if(saveResults) write.xlsx(results[["selectedTable"]], file = file.path(resultsDir, biomarkersFileName), row.names = FALSE , sheetName = "candidateBiomarkers")
+  if(saveXLS) write.xlsx(results[["selectedTable"]], file = file.path(resultsDir, biomarkersFileName), row.names = FALSE , sheetName = "candidateBiomarkers")
   
   
   ## COMPARE RESULTS 
@@ -188,7 +192,7 @@ createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodName
   s <- paste(s1, s2, s3, s4, sep = ".")
   
   
-  if (!cond3) {
+  if (!multiclass) {
     compClassifs <- CMA::compare(classifs, measure = compMeasures)
     resultsClassif <- data.frame(CrossVal = s1, VarSel = s2, numGenes = s3, Classif = s4, compClassifs)
   }
@@ -198,7 +202,7 @@ createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodName
   }
   
   ## SAVE COMPARED RESULTS 
-  if(saveResults) 
+  if(saveXLS) 
   {
     write.xlsx(resultsClassif, 
                file = file.path(resultsDir,
@@ -207,7 +211,7 @@ createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodName
   }
   if (validation) {
     resValid <- cbind(resultsClassif,misclassifTEST = unlist(misscls))
-    if(saveResults) 
+    if(saveXLS) 
     {
     write.xlsx(resValid, file = file.path(resultsDir,
                                           paste0(compName, "Results", if (learnSetNames != "LOOCV")

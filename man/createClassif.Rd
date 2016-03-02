@@ -5,9 +5,9 @@
 \title{A createClassif Function}
 \usage{
 createClassif(X.tr, Y.tr, learningSets, learnSetNames, selMethodNames,
-  numGenes2Sel = c(3, 5, 10), classifierNames, cond3 = FALSE, isTunable,
-  resultsDir, compName, niter, ntoplist = 25, X.new, Y.new,
-  validation = TRUE, saveResults = TRUE)
+  numGenes2Sel = c(3, 5, 10), classifierNames, multiclass = FALSE,
+  isTunable, resultsDir, compName, niter, ntoplist = 25, X.new, Y.new,
+  validation = TRUE, saveXLS = TRUE)
 }
 \arguments{
 \item{X.tr}{matriz númerica con los valores de los datos. Donde las columnas son los "features" y las filas los individuos. Estos datos serán usados para la construcción del biomarcador}
@@ -24,7 +24,7 @@ createClassif(X.tr, Y.tr, learningSets, learnSetNames, selMethodNames,
 
 \item{classifierNames}{vector caracter indicando el método de classificador usado .(p.ej. c("CMA::dldaCMA", "CMA::rfCMA", "CMA::pnnCMA", "CMA::plrCMA") ), parámetro classifier \code{\link{GeneSelection}}}
 
-\item{cond3}{valor lógico que indica si se la comparación, es decir, los factores son igual a 3.}
+\item{multiclass}{valor lógico que indica si se la comparación, es decir, los factores son igual a 3.}
 
 \item{resultsDir}{carpeta donde se guardaran los resultados. p.e. "results/". Solo necesario cuando saveLearnSet = TRUE}
 
@@ -40,9 +40,16 @@ createClassif(X.tr, Y.tr, learningSets, learnSetNames, selMethodNames,
 
 \item{validation}{valor lógico que indica si se incluye una base de datos de validación.}
 
-\item{saveResults}{valor logico que indica si se guardan los resultados en disco}
+\item{saveXLS}{valor logico que indica si se guardan los resultados en disco}
 
 \item{fold}{Gives the number of CV-groups. Used only when method="CV"}
+}
+\value{
+candFeat:  tablas con los features seleccionados, tanto con identificador númerico (table_all) como con la etiqueta de cada feature (selectedTable)
+
+cl:  resultado en formato "cloutput" de cada uno de los biomarcadores realizados para cada método
+
+ResultsClassif: resultados resumidos de cada biomarcador, en el caso de dos condiciones experimentales se obtienen los siguientes indicadores de calidad: misclassification, sensitivity y specificity. Si son más de dos condiciones experimentales obtenemos únicamente misclassification.
 }
 \description{
 Construcción y validación externa de un biomarcador.
