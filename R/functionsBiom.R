@@ -21,6 +21,9 @@
 #' @references M Slawski, M Daumer and A-L Boulesteix, CMA – a comprehensive Bioconductor package for supervised classification with high dimensional data
 
 prepLearnSets <- function(Y.tr, learnSetNames, compName,resultsDir,  fold = 5 , niter = 100, saveLearnSet = T){
+  #if (!grepl("LOOCV|bootstrap|CV|MCCV",learnSetNames))  
+  #  cat("Error in match.arg(learnSetNames, c('LOOCV', 'CV', 'MCCV', 'bootstrap')): \n'arg' should be one of 'LOOCV', 'CV', 'MCCV', 'bootstrap'")
+  if(saveLearnSet) if (!dir.exists(resultsDir)) dir.create(resultsDir)
   if (learnSetNames == "LOOCV") loo <- GenerateLearningsets(y = Y.tr, method = learnSetNames)
   if (learnSetNames == "bootstrap") loo <- GenerateLearningsets(y = Y.tr, method = learnSetNames,
                                                                 niter = niter,ntrain = floor(2/3*length(Y.tr)))
