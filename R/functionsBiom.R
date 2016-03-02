@@ -6,11 +6,11 @@
 #' @param compName nombre de la comparación, se usara como identificador y para el nombre de archivos resultantes
 #' @param resultsDir carpeta donde se guardaran los resultados. p.e. "results/". Solo necesario cuando saveLearnSet = TRUE
 #' @param fold Gives the number of CV-groups. Used only when method="CV"
-#' @param niter Number of iterations (s.details).
+#' @param niter Number of iterations.
 #' @param saveLearnSet valor logico que indica si se guardan los resultados en disco
 #' @export prepLearnSets
 #' @import CMA
-#' @author Miriam Mota <mmota.foix@@gmail.com>
+#' @author Miriam Mota \email{mmota.foix@@gmail.com}
 #' @seealso Text with \code{\link{GenerateLearningsets}} 
 #' @examples
 #' y <- factor(c(rep("A",10),rep("B",10)))
@@ -60,7 +60,7 @@ prepLearnSets <- function(Y.tr, learnSetNames, compName,resultsDir,  fold = 5 , 
 #' @keywords cma predictor biomarcador clasificador learningsets
 #' @export createClassif
 #' @import CMA xlsx
-#' @author Miriam Mota <mmota.foix@@gmail.com>
+#' @author Miriam Mota \email{mmota.foix@@gmail.com}
 #' @seealso Text with \code{\link{GeneSelection}} 
 #' @examples
 #'  x <- cbind(matrix(rnorm(400,500),nrow = 40),matrix(rnorm(400,5),nrow = 40))
@@ -82,7 +82,7 @@ prepLearnSets <- function(Y.tr, learnSetNames, compName,resultsDir,  fold = 5 , 
 #' @return candFeat:  tablas con los features seleccionados, tanto con identificador númerico (table_all) como con la etiqueta de cada feature (selectedTable)
 #' @return cl:  resultado en formato "cloutput" de cada uno de los biomarcadores realizados para cada método
 #' @return ResultsClassif: resultados resumidos de cada biomarcador, en el caso de dos condiciones experimentales se obtienen los siguientes indicadores de calidad: misclassification, sensitivity y specificity. Si son más de dos condiciones experimentales obtenemos únicamente misclassification.
-
+#' @return misscls: solo si "validation = TRUE" indica la tasa de misclassification de los nuevos datos sobre los diferentes métodos utilizados.
 
 
 createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodNames, numGenes2Sel = c(3,5,10), classifierNames,

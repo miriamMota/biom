@@ -50,6 +50,8 @@ candFeat:  tablas con los features seleccionados, tanto con identificador númer
 cl:  resultado en formato "cloutput" de cada uno de los biomarcadores realizados para cada método
 
 ResultsClassif: resultados resumidos de cada biomarcador, en el caso de dos condiciones experimentales se obtienen los siguientes indicadores de calidad: misclassification, sensitivity y specificity. Si son más de dos condiciones experimentales obtenemos únicamente misclassification.
+
+misscls: solo si "validation = TRUE" indica la tasa de misclassification de los nuevos datos sobre los diferentes métodos utilizados.
 }
 \description{
 Construcción y validación externa de un biomarcador.
@@ -73,7 +75,7 @@ Construcción y validación externa de un biomarcador.
                       ntoplist = 10)
 }
 \author{
-Miriam Mota <mmota.foix@gmail.com>
+Miriam Mota \email{mmota.foix@gmail.com}
 }
 \seealso{
 Text with \code{\link{GeneSelection}}

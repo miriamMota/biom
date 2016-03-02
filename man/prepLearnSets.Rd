@@ -18,7 +18,7 @@ prepLearnSets(Y.tr, learnSetNames, compName, resultsDir, fold = 5,
 
 \item{fold}{Gives the number of CV-groups. Used only when method="CV"}
 
-\item{niter}{Number of iterations (s.details).}
+\item{niter}{Number of iterations.}
 
 \item{saveLearnSet}{valor logico que indica si se guardan los resultados en disco}
 }
@@ -35,7 +35,7 @@ y <- factor(c(rep("A",10),rep("B",10)))
 lSet <- prepLearnSets(Y.tr = y , learnSetNames = "LOOCV", compName = "AvsB", saveLearnSet = F) 
 }
 \author{
-Miriam Mota <mmota.foix@gmail.com>
+Miriam Mota \email{mmota.foix@gmail.com}
 }
 \references{
 M Slawski, M Daumer and A-L Boulesteix, CMA – a comprehensive Bioconductor package for supervised classification with high dimensional data
