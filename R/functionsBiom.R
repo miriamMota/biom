@@ -83,6 +83,7 @@ prepLearnSets <- function(Y.tr, learnSetNames, compName,resultsDir,  fold = 5 , 
 #' @return cl:  resultado en formato "cloutput" de cada uno de los biomarcadores realizados para cada método
 #' @return ResultsClassif: resultados resumidos de cada biomarcador, en el caso de dos condiciones experimentales se obtienen los siguientes indicadores de calidad: misclassification, sensitivity y specificity. Si son más de dos condiciones experimentales obtenemos únicamente misclassification.
 #' @return misscls: solo si "validation = TRUE" indica la tasa de misclassification de los nuevos datos sobre los diferentes métodos utilizados.
+#' @references M Slawski, M Daumer and A-L Boulesteix, CMA – a comprehensive Bioconductor package for supervised classification with high dimensional data
 
 
 createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodNames, numGenes2Sel = c(3,5,10), classifierNames,

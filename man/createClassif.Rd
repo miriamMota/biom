@@ -77,6 +77,9 @@ Construcción y validación externa de un biomarcador.
 \author{
 Miriam Mota \email{mmota.foix@gmail.com}
 }
+\references{
+M Slawski, M Daumer and A-L Boulesteix, CMA – a comprehensive Bioconductor package for supervised classification with high dimensional data
+}
 \seealso{
 Text with \code{\link{GeneSelection}}
 }
