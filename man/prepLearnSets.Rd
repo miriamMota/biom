@@ -31,7 +31,6 @@ learningSetsFileName nombre del archivo guardado con los "datos de entrenamiento
 Genera datos de entrenamiento a partir de una base de datos mediante diferentes técnicas de cross-validation
 }
 \examples{
-require(CMA)
 y <- factor(c(rep("A",10),rep("B",10)))
 lSet <- prepLearnSets(Y.tr = y , learnSetNames = "LOOCV", compName = "AvsB", saveLearnSet = F) 
 }

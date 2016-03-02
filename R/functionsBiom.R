@@ -13,7 +13,6 @@
 #' @author Miriam Mota <mmota.foix@@gmail.com>
 #' @seealso Text with \code{\link{GenerateLearningsets}} 
 #' @examples
-#' require(CMA)
 #' y <- factor(c(rep("A",10),rep("B",10)))
 #' lSet <- prepLearnSets(Y.tr = y , learnSetNames = "LOOCV", compName = "AvsB", saveLearnSet = F) 
 #' @return learningSets datos resultantes, "datos de entrenamiento". Objeto con clase "learningsets".
@@ -57,14 +56,13 @@ prepLearnSets <- function(Y.tr, learnSetNames, compName,resultsDir,  fold = 5 , 
 #' @param Y.new Solo si validation = TRUE. vector de datos de clase "factor" donde se indican las condiciones experimentales (a comparar) de cada individuo indicado en las filas de X.new
 #' @param validation valor lógico que indica si se incluye una base de datos de validación.
 #' @param cond3 valor lógico que indica si se la comparación, es decir, los factores son igual a 3. 
+#' @param saveResults valor logico que indica si se guardan los resultados en disco
 #' @keywords cma predictor biomarcador clasificador learningsets
 #' @export createClassif
 #' @import CMA xlsx
 #' @author Miriam Mota <mmota.foix@@gmail.com>
 #' @seealso Text with \code{\link{GeneSelection}} 
 #' @examples
-#' require(CMA)
-#' require(xlsx)
 #'  x <- cbind(matrix(rnorm(400,500),nrow = 40),matrix(rnorm(400,5),nrow = 40))
 #'  colnames(x) <- paste0("a",1:ncol(x))
 #'  rownames(x) <- paste0("aa",1:nrow(x))
@@ -85,7 +83,8 @@ prepLearnSets <- function(Y.tr, learnSetNames, compName,resultsDir,  fold = 5 , 
 
 
 createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodNames, numGenes2Sel = c(3,5,10), classifierNames,
-                          cond3=FALSE, isTunable, resultsDir, compName, niter,ntoplist = 25, X.new, Y.new, validation = TRUE)
+                          cond3=FALSE, isTunable, resultsDir, compName, niter,ntoplist = 25, X.new, Y.new, validation = TRUE,
+                          saveResults = TRUE)
 {
   classifs <- list();   geneSels <- list() ;   results <- list(); misscls <- list()
   for (i in 1:length(learningSets)) {
@@ -175,7 +174,7 @@ createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodName
   
   # guardem features candidats
   biomarkersFileName <- paste0(compName, "Results",if (learnSetNames != "LOOCV")  {paste0(niter, "iter")} , ".xls")
-  write.xlsx(results[["selectedTable"]], file = file.path(resultsDir, biomarkersFileName), row.names = FALSE , sheetName = "candidateBiomarkers")
+  if(saveResults) write.xlsx(results[["selectedTable"]], file = file.path(resultsDir, biomarkersFileName), row.names = FALSE , sheetName = "candidateBiomarkers")
   
   
   ## COMPARE RESULTS 
@@ -199,15 +198,21 @@ createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodName
   }
   
   ## SAVE COMPARED RESULTS 
-  write.xlsx(resultsClassif, file = file.path(resultsDir,
-                                              paste0(compName, "Results", if (learnSetNames != "LOOCV")
-                                              {paste0(niter, "iter")}, ".xls")),sheetName = "classif",append = TRUE)
-  
+  if(saveResults) 
+  {
+    write.xlsx(resultsClassif, 
+               file = file.path(resultsDir,
+                                paste0(compName, "Results", if (learnSetNames != "LOOCV")
+                                {paste0(niter, "iter")}, ".xls")),sheetName = "classif",append = TRUE)
+  }
   if (validation) {
     resValid <- cbind(resultsClassif,misclassifTEST = unlist(misscls))
+    if(saveResults) 
+    {
     write.xlsx(resValid, file = file.path(resultsDir,
                                           paste0(compName, "Results", if (learnSetNames != "LOOCV")
                                           {paste0(niter, "iter")}, ".xls")),sheetName = "validation", append = TRUE)
+    }
   }
   
   if (validation) {

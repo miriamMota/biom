@@ -7,7 +7,7 @@
 createClassif(X.tr, Y.tr, learningSets, learnSetNames, selMethodNames,
   numGenes2Sel = c(3, 5, 10), classifierNames, cond3 = FALSE, isTunable,
   resultsDir, compName, niter, ntoplist = 25, X.new, Y.new,
-  validation = TRUE)
+  validation = TRUE, saveResults = TRUE)
 }
 \arguments{
 \item{X.tr}{matriz númerica con los valores de los datos. Donde las columnas son los "features" y las filas los individuos. Estos datos serán usados para la construcción del biomarcador}
@@ -40,14 +40,14 @@ createClassif(X.tr, Y.tr, learningSets, learnSetNames, selMethodNames,
 
 \item{validation}{valor lógico que indica si se incluye una base de datos de validación.}
 
+\item{saveResults}{valor logico que indica si se guardan los resultados en disco}
+
 \item{fold}{Gives the number of CV-groups. Used only when method="CV"}
 }
 \description{
 Construcción y validación externa de un biomarcador.
 }
 \examples{
-require(CMA)
-require(xlsx)
  x <- cbind(matrix(rnorm(400,500),nrow = 40),matrix(rnorm(400,5),nrow = 40))
  colnames(x) <- paste0("a",1:ncol(x))
  rownames(x) <- paste0("aa",1:nrow(x))
