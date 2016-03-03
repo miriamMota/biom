@@ -11,6 +11,4 @@ RoxygenNote: 5.0.1
 Imports:
     CMA,
     xlsx
-Collate:
-    'exemple1.R'
-    'functionsBiom.R'
+

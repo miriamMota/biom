@@ -10,5 +10,5 @@ LazyData: true
 RoxygenNote: 5.0.1
 Imports:
     CMA,
-    xlsx
+    xlsx, stringr
 

@@ -89,9 +89,9 @@ prepLearnSets <- function(Y.tr, learnSetNames, compName,resultsDir,  fold = 5 , 
 #' @references M Slawski, M Daumer and A-L Boulesteix, CMA – a comprehensive Bioconductor package for supervised classification with high dimensional data
 
 
-createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodNames, numGenes2Sel = c(3,5,10), classifierNames,
-                          multiclass=FALSE, isTunable, resultsDir, compName, niter,ntoplist = 25, X.new, Y.new, validation = TRUE,
-                          saveXLS = TRUE)
+createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodNames, numGenes2Sel = c(3,5,10),
+                          classifierNames, multiclass=FALSE, isTunable, resultsDir, compName, niter, ntoplist = 25,
+                          X.new, Y.new, validation = TRUE, saveXLS = TRUE)
 {
   if (!dir.exists(resultsDir)) dir.create(resultsDir)
   classifs <- list();   geneSels <- list() ;   results <- list(); misscls <- list()
