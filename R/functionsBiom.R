@@ -62,7 +62,7 @@ prepLearnSets <- function(Y.tr, learnSetNames, compName,resultsDir,  fold = 5 , 
 #' @param saveXLS valor logico que indica si se guardan los resultados en disco
 #' @keywords cma predictor biomarcador clasificador learningsets
 #' @export createClassif
-#' @import CMA WriteXLS
+#' @import CMA xlsx
 #' @author Miriam Mota \email{mmota.foix@@gmail.com}
 #' @seealso Text with \code{\link{GeneSelection}}
 #' @examples
@@ -182,7 +182,7 @@ createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodName
 
   # guardem features candidats
   biomarkersFileName <- paste0(compName, "Results",if (learnSetNames != "LOOCV")  {paste0(niter, "iter")} , ".xlsx")
-  if(saveXLS) WriteXLS(results[["selectedTable"]], ExcelFileName = file.path(resultsDir, biomarkersFileName), row.names = FALSE , SheetNames = "candidateBiomarkers")
+  if(saveXLS) write.xlsx(results[["selectedTable"]], file = file.path(resultsDir, biomarkersFileName), row.names = FALSE , sheetName = "candidateBiomarkers")
 
 
   ## COMPARE RESULTS
@@ -208,18 +208,18 @@ createClassif <- function(X.tr, Y.tr, learningSets, learnSetNames, selMethodName
   ## SAVE COMPARED RESULTS
   if(saveXLS)
   {
-    WriteXLS(resultsClassif,
-             ExcelFileName = file.path(resultsDir,
+    write.xlsx(resultsClassif,
+             file = file.path(resultsDir,
                                 paste0(compName, "Results", if (learnSetNames != "LOOCV")
-                                {paste0(niter, "iter")}, ".xlsx")),SheetNames = "classif")
+                                {paste0(niter, "iter")}, ".xlsx")), sheetName = "classif", append = TRUE)
   }
   if (validation) {
     resValid <- cbind(resultsClassif,misclassifTEST = unlist(misscls))
     if(saveXLS)
     {
-      WriteXLS(resValid, ExcelFileName = file.path(resultsDir,
+      write.xlsx(resValid, file = file.path(resultsDir,
                                           paste0(compName, "Results", if (learnSetNames != "LOOCV")
-                                          {paste0(niter, "iter")}, ".xlsx")),SheetNames = "validation")
+                                          {paste0(niter, "iter")}, ".xlsx")),sheetName = "validation", append = TRUE)
     }
   }
 
