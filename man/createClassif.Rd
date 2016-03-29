@@ -61,14 +61,14 @@ Construcción y validación externa de un biomarcador.
  colnames(x) <- paste0("a",1:ncol(x))
  rownames(x) <- paste0("aa",1:nrow(x))
  y <- factor(c(rep("A",20),rep("B",20)))
- lSet <- prepLearnSets(Y.tr = y , learnSetNames = "LOOCV", compName = "AvsB", saveLearnSet = F)
+ lSet <- prepLearnSets(Y.tr = y , learnSetNames = "LOOCV", compName = "AvsB", saveLearnSet = F)  
  resF <- createClassif(X.tr = x,
                        Y.tr = y,
                       learningSets  = lSet$learningSets,
                       learnSetNames = c("LOOCV"),
                       selMethodNames = c("t.test"),
                       numGenes2Sel = c(3,5,10),
-                      classifierNames = c("CMA::dldaCMA", "CMA::rfCMA", "CMA::pnnCMA") ,
+                      classifierNames = c("CMA::dldaCMA", "CMA::rfCMA", "CMA::pnnCMA") , 
                       resultsDir = "example/",
                       compName = "AvsB",
                       validation=FALSE,

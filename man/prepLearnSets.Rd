@@ -32,7 +32,7 @@ Genera datos de entrenamiento a partir de una base de datos mediante diferentes 
 }
 \examples{
 y <- factor(c(rep("A",10),rep("B",10)))
-lSet <- prepLearnSets(Y.tr = y , learnSetNames = "LOOCV", compName = "AvsB", saveLearnSet = F)
+lSet <- prepLearnSets(Y.tr = y , learnSetNames = "LOOCV", compName = "AvsB", saveLearnSet = F) 
 }
 \author{
 Miriam Mota \email{mmota.foix@gmail.com}
