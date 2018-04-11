@@ -38,4 +38,3 @@ Miriam Mota \email{mmota.foix@gmail.com}
 }
 \keyword{comparison}
 \keyword{prepare}
-
